@@ -236,7 +236,7 @@ class QueueProcessor(Thread):
                              "not present anymore.",
                              self.channel_directory[chan_id])
 
-    def _handle_account(self, dtype, data, ts):
+    def _handle_account(self, data, ts):
         """ Handles Account related data.
 
         translation table for channel names:
