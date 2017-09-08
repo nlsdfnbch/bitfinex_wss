@@ -215,6 +215,9 @@ class BtfxWss:
     # Data Retrieval Methods #
     ##########################
 
+    def raw_data(self):
+        return self.queue_processor.raw_data
+
     def tickers(self, pair):
         """Return a queue containing all received ticker data.
         
