@@ -53,6 +53,8 @@ class QueueProcessor(Thread):
         # dict to register a method with a channel id
         self.channel_handlers = {}
 
+        self.raw_data = Queue()
+
         # Keeps track of last update to a channel by id.
         self.last_update = {}
         self.tickers = defaultdict(Queue)
@@ -119,8 +121,9 @@ class QueueProcessor(Thread):
                         # 'book', 'ticker' or similar
                         channel_type, *_ = self.channel_directory[channel_id]
 
+                        self._handle_raw_data(channel_type, data, ts)
                         # Run the associated data handler for this channel type.
-                        self._data_handlers[channel_type](channel_type, data, ts)
+                        # self._data_handlers[channel_type](channel_type, data, ts)
                         # Update time stamps.
                         self.update_timestamps(channel_id, ts)
                     else:
@@ -270,6 +273,12 @@ class QueueProcessor(Thread):
         channel_identifier = self.account_channel_names[data[0]]
         entry = (data, ts)
         self.account[channel_identifier].put(entry)
+
+    def _handle_raw_data(self, dtype, data, ts):
+        channel_id, *data = data
+        channel_identifier = self.channel_directory[channel_id]
+        entry = (channel_identifier[1], data, ts)
+        self.raw_data.put(entry)
 
     def _handle_ticker(self, dtype, data, ts):
         """Adds received ticker data to self.tickers dict, filed under its channel
