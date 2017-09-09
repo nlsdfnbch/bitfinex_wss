@@ -28,8 +28,11 @@ Usage
 =====
 
 ```python
+    import sys
+    import time
+    import logging
     from btfxwss import BtfxWss
-    
+
     log = logging.getLogger(__name__)
 
     fh = logging.FileHandler('test.log')
@@ -40,13 +43,13 @@ Usage
     log.addHandler(sh)
     log.addHandler(fh)
     logging.basicConfig(level=logging.DEBUG, handlers=[fh, sh])
-    
+
     wss = BtfxWss()
     wss.start()
-    
+
     # Wait (indefinitely) for the websocket connection to happen.
-    wss.conn.wait():
-    
+    wss.conn.connected.wait()
+
     # Subscribe to some channels
     wss.subscribe_to_ticker('BTCUSD')
     wss.subscribe_to_order_book('BTCUSD')
@@ -64,7 +67,7 @@ Usage
     # Unsubscribing from channels:
     wss.unsubscribe_from_ticker('BTCUSD')
     wss.unsubscribe_from_order_book('BTCUSD')
-
+    
     # Shutting down the client:
     wss.stop()
 ```
