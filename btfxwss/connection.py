@@ -229,7 +229,10 @@ class WebSocketConnection(Thread):
         :return:
         """
         self.log.debug("send_ping(): Sending ping to API..")
-        self.socket.send(json.dumps({'event': 'ping'}))
+        try:
+            self.socket.send(json.dumps({'event': 'ping'}))
+        except websocket.WebSocketConnectionClosedException:
+            self.log.error("send(): Did not send out ping - client not connected. ")
         self.pong_timer = Timer(self.pong_timeout, self._check_pong)
         self.pong_timer.start()
 
