@@ -266,7 +266,7 @@ class QueueProcessor(Thread):
         :return:
         """
 
-        chan_id, data, = data[:1] + [data[1:]]
+        chan_id, data, = data
         channel_identifier = self.account_channel_names[data[0]]
         entry = (data, ts)
         self.account[channel_identifier].put(entry)
@@ -281,7 +281,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_ticker: %s - %s - %s", dtype, data, ts)
-        channel_id, data, = data[:1] + [data[1:]]
+        channel_id, data, = data
         channel_identifier = self.channel_directory[channel_id]
 
         entry = (data, ts)
@@ -296,7 +296,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_book: %s - %s - %s", dtype, data, ts)
-        channel_id, data, = data[:1] + [data[1:]]
+        channel_id, data, = data
         log.debug("ts: %s\tchan_id: %s\tdata: %s", ts, channel_id, data)
         channel_identifier = self.channel_directory[channel_id]
         entry = (data, ts)
@@ -311,7 +311,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_raw_book: %s - %s - %s", dtype, data, ts)
-        channel_id, data, = data[:1] + [data[1:]]
+        channel_id, data, = data
         channel_identifier = self.channel_directory[channel_id]
         entry = (data, ts)
         self.raw_books[channel_identifier].put(entry)
@@ -325,7 +325,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_trades: %s - %s - %s", dtype, data, ts)
-        channel_id, data, = data[:1] + [data[1:]]
+        channel_id, data, = data
         channel_identifier = self.channel_directory[channel_id]
         entry = (data, ts)
         self.trades[channel_identifier].put(entry)
@@ -339,7 +339,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_candles: %s - %s - %s", dtype, data, ts)
-        channel_id, data, = data[:1] + [data[1:]]
+        channel_id, data, = data
         channel_identifier = self.channel_directory[channel_id]
         entry = (data, ts)
         self.candles[channel_identifier].put(entry)
