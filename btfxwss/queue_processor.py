@@ -148,6 +148,8 @@ class QueueProcessor(Thread):
         channel_id = data.pop('chanId')
         config = data
         if 'symbol' in config:
+            # In version 2 of the API, the symbol seems to be preceeded by
+            # char 't' on the symbol field. Issue: #https://github.com/nlsdfnbch/btfxwss/issues/51
             symbol = config['symbol'][1:]
         elif 'pair' in config:
             symbol = config['pair']
