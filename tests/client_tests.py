@@ -2,7 +2,7 @@ import logging
 from unittest import TestCase
 import unittest
 import time
-from queue import Empty
+from Queue import Empty
 from btfxwss import BtfxWss
 from websocket import WebSocketConnectionClosedException
 

@@ -1,7 +1,7 @@
 # Import Built-Ins
 import logging
 from threading import Thread, Event
-from queue import Empty, Queue
+from Queue import Empty, Queue
 from collections import defaultdict
 
 # Import Third-Party
@@ -117,7 +117,7 @@ class QueueProcessor(Thread):
                         # Get channel type associated with this data to the
                         # associated data type (from 'data' to
                         # 'book', 'ticker' or similar
-                        channel_type, *_ = self.channel_directory[channel_id]
+                        channel_type = self.channel_directory[channel_id][0]
 
                         # Run the associated data handler for this channel type.
                         self._data_handlers[channel_type](channel_type, data, ts)
@@ -148,7 +148,9 @@ class QueueProcessor(Thread):
         channel_id = data.pop('chanId')
         config = data
         if 'symbol' in config:
-            symbol = config['symbol']
+            # In version 2 of the API, the symbol seems to be preceeded by
+            # char 't' on the symbol field. Issue: #https://github.com/nlsdfnbch/btfxwss/issues/51
+            symbol = config['symbol'][1:]
         elif 'pair' in config:
             symbol = config['pair']
         elif 'key' in config:
@@ -266,7 +268,7 @@ class QueueProcessor(Thread):
         :return:
         """
 
-        chan_id, *data = data
+        chan_id, data, = data
         channel_identifier = self.account_channel_names[data[0]]
         entry = (data, ts)
         self.account[channel_identifier].put(entry)
@@ -281,7 +283,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_ticker: %s - %s - %s", dtype, data, ts)
-        channel_id, *data = data
+        channel_id, data, = data
         channel_identifier = self.channel_directory[channel_id]
 
         entry = (data, ts)
@@ -296,7 +298,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_book: %s - %s - %s", dtype, data, ts)
-        channel_id, *data = data
+        channel_id, data, = data
         log.debug("ts: %s\tchan_id: %s\tdata: %s", ts, channel_id, data)
         channel_identifier = self.channel_directory[channel_id]
         entry = (data, ts)
@@ -311,7 +313,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_raw_book: %s - %s - %s", dtype, data, ts)
-        channel_id, *data = data
+        channel_id, data, = data
         channel_identifier = self.channel_directory[channel_id]
         entry = (data, ts)
         self.raw_books[channel_identifier].put(entry)
@@ -325,7 +327,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_trades: %s - %s - %s", dtype, data, ts)
-        channel_id, *data = data
+        channel_id, data, = data
         channel_identifier = self.channel_directory[channel_id]
         entry = (data, ts)
         self.trades[channel_identifier].put(entry)
@@ -339,7 +341,7 @@ class QueueProcessor(Thread):
         :return:
         """
         self.log.debug("_handle_candles: %s - %s - %s", dtype, data, ts)
-        channel_id, *data = data
+        channel_id, data, = data
         channel_identifier = self.channel_directory[channel_id]
         entry = (data, ts)
         self.candles[channel_identifier].put(entry)
