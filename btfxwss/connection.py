@@ -3,7 +3,7 @@ import logging
 import json
 import time
 import ssl
-from queue import Queue
+from Queue import Queue
 from threading import Thread, Event, Timer
 
 # Import Third-Party
@@ -24,7 +24,7 @@ class WebSocketConnection(Thread):
     It handles all low-level system messages, such a reconnects, pausing of
     activity and continuing of activity.
     """
-    def __init__(self, *args, url=None, timeout=None,
+    def __init__(self, url=None, timeout=None,
                  reconnect_interval=None, log_level=None, **kwargs):
         """Initialize a WebSocketConnection Instance.
 
@@ -169,7 +169,7 @@ class WebSocketConnection(Thread):
         # We've received data, reset timers
         self._start_timers()
 
-    def _on_close(self, ws, *args):
+    def _on_close(self, ws):
         self.log.info("Connection closed")
         self.connected.clear()
         self._stop_timers()
@@ -263,7 +263,7 @@ class WebSocketConnection(Thread):
         :param args:
         :return:
         """
-        self.q.put((event, data, *args))
+        self.q.put((event, data) + tuple(args))
 
     def _connection_timed_out(self):
         """Issues a reconnection if the connection timed out.
@@ -413,8 +413,3 @@ class WebSocketConnection(Thread):
         log.debug("_data_handler(): Passing %s to client..",
                   data)
         self.pass_to_client('data', data, ts)
-
-
-
-
-
