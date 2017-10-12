@@ -148,7 +148,7 @@ class QueueProcessor(Thread):
         channel_id = data.pop('chanId')
         config = data
         if 'symbol' in config:
-            symbol = config['symbol']
+            symbol = config['symbol'][1:]
         elif 'pair' in config:
             symbol = config['pair']
         elif 'key' in config:
