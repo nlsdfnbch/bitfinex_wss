@@ -639,4 +639,4 @@ class BtfxWss:
 
     def _send_auth_command(self, channel_name, data):
         payload = [0, channel_name, None, data]
-        self.conn.send(list_data=payload)
+        self.conn.send(list_data=payload, auth = True, api_key = self.key, secret = self.secret)
