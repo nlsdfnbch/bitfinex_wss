@@ -402,7 +402,7 @@ class WebSocketConnection(Thread):
             # Unknonw info code, log it
             return
 
-        def _error_handler(self, data):
+    def _error_handler(self, data):
         """Handles Error messages and logs them accordingly.
 
         :param data:
