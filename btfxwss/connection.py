@@ -397,8 +397,9 @@ class WebSocketConnection(Thread):
         codes = {'20051': self.reconnect, '20060': self._pause,
                  '20061': self._unpause}
         try:
-            self.log.info(info_message[data['code']])
-            codes[data['code']]()
+            if 'code' in data:
+                self.log.info(info_message[data['code']])
+                codes[data['code']]()
         except KeyError as e:
             self.log.exception(e)
             self.log.error("Unknown Info code %s!", data['code'])
