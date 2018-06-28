@@ -53,7 +53,7 @@ class WebSocketConnection(Thread):
         # Connection Settings
         self.socket = None
         self.url = url if url else 'wss://api.bitfinex.com/ws/2'
-        self.sslopt = sslopt if sslopt else {}
+        self.sslopt = {"cert_reqs": ssl.CERT_NONE}
         
         # Proxy Settings
         self.http_proxy_host = http_proxy_host
